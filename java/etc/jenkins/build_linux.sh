@@ -43,10 +43,6 @@ fi
 
 echo "======== BUILD Couchbase Lite Java, Community Edition v`cat ../../version.txt`-${BUILD_NUMBER} (${DISTRO})"
 
-echo "======== Install Toolchain"
-cbdep install -d "${WORKSPACE}/bin" java 8u192
-export $JAVA_HOME="${WORKSPACE}/bin/java-8u192"
-
 echo "======== Download Lite Core ..."
 "${TOOLS_DIR}/fetch_litecore.sh" -e CE -n "${NEXUS_URL}" -p "${DISTRO}"
 
@@ -60,7 +56,7 @@ touch local.properties
 echo "======== Download platform artifacts"
 for PLATFORM in macos windows; do
    ARTIFACT="${PRODUCT}-${VERSION}-${BUILD_NUMBER}-${PLATFORM}.zip"
-   REMOTE_ARTIFACT="${LATESTBUILDS_URL}/${VERSION}/${BUILD_NUMBER}/${ARTIFACT}"
+   REMOTE_ARTIFACT="${LATESTBUILDS_URL}/couchbase-lite-java/${VERSION}/${BUILD_NUMBER}/${ARTIFACT}"
    LOCAL_ARTIFACT="${WORKSPACE}/${ARTIFACT}"
 
    echo "Downloading artifact: ${REMOTE_ARTIFACT}"

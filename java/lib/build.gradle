@@ -56,7 +56,7 @@ ext {
     CBL_DESCRIPTION = 'Couchbase Lite is an embedded lightweight, document-oriented (NoSQL), syncable database engine.'
     CBL_LICENSE = 'Couchbase, Inc. Community Edition License Agreement'
     CBL_LICENSE_URL = "https://raw.githubusercontent.com/couchbase/product-texts/${getLicenseVersion()}/mobile/couchbase-lite/license/LICENSE_community.txt"
-    CBL_PROJECT_URL = 'https://github.com:couchbase/couchbase-lite-java-ce-root.git'
+    CBL_PROJECT_URL = 'https://github.com:couchbase/couchbase-lite-java-ce-root'
     CBL_ISSUES_URL = 'https://github.com/couchbase/couchbase-lite-java-ce-root/issues'
     CBL_SITE_URL = 'https://developer.couchbase.com/mobile/'
 
@@ -71,7 +71,7 @@ ext {
     CBL_CORE_DIR = "${ROOT_DIR}/core"
     CBL_CE_ROOT_DIR = "${ROOT_DIR}/ce"
     CBL_COMMON_ROOT_DIR = "${ROOT_DIR}/common"
-    CBL_COMMON_DIR= "${CBL_COMMON_ROOT_DIR}/common"
+    CBL_COMMON_DIR = "${CBL_COMMON_ROOT_DIR}/common"
     CBL_CE_COMMON_DIR = "${CBL_CE_ROOT_DIR}/common"
     CBL_COMMON_JAVA_DIR = "${CBL_COMMON_ROOT_DIR}/java"
 
@@ -567,7 +567,7 @@ task unitTest(dependsOn: ['smokeTest', 'test'])
 task fullTest(dependsOn: ['unitTest'])
 
 ///////// CI tasks
-task ciCheck(dependsOn: ['checkstyle', 'pmd', 'spotbugsXml'])
+task ciCheck(dependsOn: ['checkstyle', 'pmd', 'spotbugsXml', 'testClasses'])
 task ciCheckWindows(dependsOn: ['pmd', 'spotbugsXml'])
 task ciBuild(dependsOn: ['assemble'])
 task ciTest(dependsOn: ['test'])
@@ -587,12 +587,6 @@ project.afterEvaluate {
 // ----------------------------------------------------------------
 // Extensions
 // ----------------------------------------------------------------
-
-def getGitCommit(repo, dflt) {
-    try { return 'git rev-parse --short HEAD'.execute([], file(repo).text.trim()) }
-    catch (Exception ignore) { }
-    return dflt
-}
 
 def setupJNILibraryBuildTasks(library, platform) {
     tasks.whenTaskAdded { task ->
@@ -626,9 +620,7 @@ def createCopyNativeLibraryTask(library, targetPlatform) {
 
     task generateNativeLibraryMD5(dependsOn: ["copyJni", "copyLiteCore"]) {
         doFirst {
-            fileTree(dir: "${CBL_NATIVE_DIR}/libs", exclude: "**/*.MD5").each { File file ->
-                ant.checksum(file: file)
-            }
+            fileTree(dir: "${CBL_NATIVE_DIR}/libs", exclude: "**/*.MD5").each { File file -> ant.checksum(file: file) }
         }
     }
 
