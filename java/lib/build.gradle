@@ -430,6 +430,10 @@ spotbugs { toolVersion = '4.0.3' }
 test {
     if (TEST_FILTER != null) { exclude "${TEST_FILTER}" }
 
+    if (System.env.LD_LIBRARY_PATH != null) {
+        jvmArgs "-Djava.library.path=${System.env.LD_LIBRARY_PATH}"
+    }
+
     testLogging {
         outputs.upToDateWhen { false }
 
